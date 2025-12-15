@@ -18,7 +18,7 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
     title: string
     description: string
     status: any
-    deadline: number | null
+    effort?: string
     assignedPeople: string[]
     priority: number
   }) => {

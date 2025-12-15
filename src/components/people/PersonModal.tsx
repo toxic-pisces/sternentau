@@ -17,7 +17,7 @@ export function PersonModal({ isOpen, onClose, person }: PersonModalProps) {
   const handleSubmit = async (data: {
     name: string
     color: string
-    minecraftUsername: string
+    imageUrl?: string
   }) => {
     setIsSubmitting(true)
 

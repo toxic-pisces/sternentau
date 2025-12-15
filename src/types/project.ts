@@ -7,7 +7,7 @@ export interface Project {
   status: ProjectStatus
   priority: number
   createdAt: number // Unix timestamp
-  deadline: number | null // Unix timestamp or null
+  effort?: string // Aufwand: Klein, Mittel, Groß
   assignedPeople: string[] // Array of person IDs
 }
 

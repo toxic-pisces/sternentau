@@ -4,8 +4,6 @@ import { usePeople } from '../../hooks'
 import { Input } from '../common/Input'
 import { Select } from '../common/Select'
 import { Button } from '../common/Button'
-import { MinecraftHead } from '../common/MinecraftHead'
-import { dateToTimestamp } from '../../utils/dateUtils'
 import styles from './ProjectForm.module.css'
 
 interface ProjectFormProps {
@@ -14,7 +12,7 @@ interface ProjectFormProps {
     title: string
     description: string
     status: ProjectStatus
-    deadline: number | null
+    effort?: string
     assignedPeople: string[]
     priority: number
   }) => void
@@ -28,6 +26,13 @@ const STATUS_OPTIONS: { value: ProjectStatus; label: string }[] = [
   { value: 'Abgeschlossen', label: 'Abgeschlossen' },
 ]
 
+const EFFORT_OPTIONS = [
+  { value: '', label: 'Keine Angabe' },
+  { value: 'Klein', label: 'Klein' },
+  { value: 'Mittel', label: 'Mittel' },
+  { value: 'Groß', label: 'Groß' },
+]
+
 export function ProjectForm({
   project,
   onSubmit,
@@ -39,9 +44,7 @@ export function ProjectForm({
   const [title, setTitle] = useState(project?.title || '')
   const [description, setDescription] = useState(project?.description || '')
   const [status, setStatus] = useState<ProjectStatus>(project?.status || 'Geplant')
-  const [deadline, setDeadline] = useState(
-    project?.deadline ? new Date(project.deadline).toISOString().split('T')[0] : ''
-  )
+  const [effort, setEffort] = useState(project?.effort || '')
   const [assignedPeople, setAssignedPeople] = useState<string[]>(project?.assignedPeople || [])
   const [errors, setErrors] = useState<{ title?: string }>({})
 
@@ -64,7 +67,7 @@ export function ProjectForm({
         title: title.trim(),
         description: description.trim(),
         status,
-        deadline: deadline ? dateToTimestamp(new Date(deadline)) : null,
+        effort: effort || undefined,
         assignedPeople,
         priority: project?.priority || 999,
       })
@@ -108,11 +111,11 @@ export function ProjectForm({
         disabled={isSubmitting}
       />
 
-      <Input
-        label="Deadline"
-        type="date"
-        value={deadline}
-        onChange={(e) => setDeadline(e.target.value)}
+      <Select
+        label="Aufwand"
+        value={effort}
+        onChange={(e) => setEffort(e.target.value)}
+        options={EFFORT_OPTIONS}
         disabled={isSubmitting}
       />
 
@@ -129,7 +132,13 @@ export function ProjectForm({
                   disabled={isSubmitting}
                 />
                 <div className={styles.personInfo}>
-                  <MinecraftHead username={person.minecraftUsername} size={32} />
+                  {person.imageUrl ? (
+                    <img src={person.imageUrl} alt={person.name} className={styles.personAvatar} />
+                  ) : (
+                    <div className={styles.personAvatarPlaceholder} style={{ backgroundColor: person.color }}>
+                      {person.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                   <span className={styles.personName}>{person.name}</span>
                 </div>
               </label>

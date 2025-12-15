@@ -87,6 +87,9 @@ export function ProjectList() {
     }
   }
 
+  const activeProjects = projects.filter((p) => p.status !== 'Abgeschlossen')
+  const completedProjects = projects.filter((p) => p.status === 'Abgeschlossen')
+
   if (loading) {
     return <LoadingSpinner message="Lade Projekte..." />
   }
@@ -100,7 +103,7 @@ export function ProjectList() {
         </Button>
       </div>
 
-      {projects.length === 0 ? (
+      {activeProjects.length === 0 && completedProjects.length === 0 ? (
         <div className={styles.empty}>
           <p className={styles.emptyText}>Noch keine Projekte angelegt.</p>
           <Button onClick={handleAddNew} variant="primary">
@@ -108,20 +111,40 @@ export function ProjectList() {
           </Button>
         </div>
       ) : (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={projects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
-            <div className={styles.list}>
-              {projects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  onEdit={() => handleEdit(project)}
-                  onDelete={() => handleDelete(project)}
-                />
-              ))}
+        <>
+          {activeProjects.length > 0 && (
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={activeProjects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+                <div className={styles.list}>
+                  {activeProjects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      onEdit={() => handleEdit(project)}
+                      onDelete={() => handleDelete(project)}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          )}
+
+          {completedProjects.length > 0 && (
+            <div className={styles.completedSection}>
+              <h3 className={styles.completedTitle}>Abgeschlossen</h3>
+              <div className={styles.completedList}>
+                {completedProjects.map((project) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    onEdit={() => handleEdit(project)}
+                    onDelete={() => handleDelete(project)}
+                  />
+                ))}
+              </div>
             </div>
-          </SortableContext>
-        </DndContext>
+          )}
+        </>
       )}
 
       <ProjectModal isOpen={modalOpen} onClose={handleCloseModal} project={editingProject} />

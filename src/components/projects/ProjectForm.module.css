@@ -75,8 +75,32 @@
   flex: 1;
 }
 
+.personAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius);
+  border: var(--border-thin) solid var(--mc-stone-lighter);
+  object-fit: cover;
+}
+
+.personAvatarPlaceholder {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius);
+  border: var(--border-thin) solid var(--mc-stone-lighter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Minecraft', monospace;
+  font-size: 16px;
+  color: #000;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
 .personName {
   font-size: 14px;
+  font-family: 'Minecraft', monospace;
   color: var(--text-primary);
 }
 

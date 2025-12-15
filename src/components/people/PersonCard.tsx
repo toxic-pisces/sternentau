@@ -1,5 +1,4 @@
 import { Person } from '../../types'
-import { MinecraftHead } from '../common/MinecraftHead'
 import { Button } from '../common/Button'
 import styles from './PersonCard.module.css'
 
@@ -14,10 +13,15 @@ export function PersonCard({ person, projectCount, onEdit, onDelete }: PersonCar
   return (
     <div className={styles.card} style={{ borderLeftColor: person.color }}>
       <div className={styles.header}>
-        <MinecraftHead username={person.minecraftUsername} size={64} />
+        {person.imageUrl ? (
+          <img src={person.imageUrl} alt={person.name} className={styles.avatar} />
+        ) : (
+          <div className={styles.avatarPlaceholder} style={{ backgroundColor: person.color }}>
+            {person.name.charAt(0).toUpperCase()}
+          </div>
+        )}
         <div className={styles.info}>
           <h3 className={styles.name}>{person.name}</h3>
-          <p className={styles.username}>@{person.minecraftUsername}</p>
           <div className={styles.color}>
             <div
               className={styles.colorPreview}

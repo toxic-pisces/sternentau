@@ -19,6 +19,28 @@
   margin-bottom: var(--spacing-md);
 }
 
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--border-radius);
+  border: var(--border-medium) solid var(--mc-stone-lighter);
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--border-radius);
+  border: var(--border-medium) solid var(--mc-stone-lighter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Minecraft', monospace;
+  font-size: 32px;
+  color: #000;
+  font-weight: bold;
+}
+
 .info {
   flex: 1;
   display: flex;
@@ -31,12 +53,6 @@
   font-size: 18px;
   margin: 0;
   color: var(--text-primary);
-}
-
-.username {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 0;
 }
 
 .color {

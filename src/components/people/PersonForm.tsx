@@ -2,33 +2,28 @@ import { useState, FormEvent } from 'react'
 import { Person } from '../../types'
 import { Input } from '../common/Input'
 import { ColorPicker } from '../common/ColorPicker'
+import { ImageUpload } from '../common/ImageUpload'
 import { Button } from '../common/Button'
 import styles from './PersonForm.module.css'
 
 interface PersonFormProps {
   person?: Person
-  onSubmit: (data: { name: string; color: string; minecraftUsername: string }) => void
+  onSubmit: (data: { name: string; color: string; imageUrl?: string }) => void
   onCancel: () => void
   isSubmitting?: boolean
 }
 
 export function PersonForm({ person, onSubmit, onCancel, isSubmitting = false }: PersonFormProps) {
   const [name, setName] = useState(person?.name || '')
-  const [minecraftUsername, setMinecraftUsername] = useState(person?.minecraftUsername || '')
+  const [imageUrl, setImageUrl] = useState(person?.imageUrl || '')
   const [color, setColor] = useState(person?.color || '#55FF55')
-  const [errors, setErrors] = useState<{ name?: string; username?: string }>({})
+  const [errors, setErrors] = useState<{ name?: string }>({})
 
   const validate = (): boolean => {
-    const newErrors: { name?: string; username?: string } = {}
+    const newErrors: { name?: string } = {}
 
     if (!name.trim()) {
       newErrors.name = 'Name ist erforderlich'
-    }
-
-    if (!minecraftUsername.trim()) {
-      newErrors.username = 'Minecraft Username ist erforderlich'
-    } else if (!/^[a-zA-Z0-9_]{1,16}$/.test(minecraftUsername)) {
-      newErrors.username = 'Ungültiger Username (nur a-z, 0-9, _ erlaubt, max 16 Zeichen)'
     }
 
     setErrors(newErrors)
@@ -42,7 +37,7 @@ export function PersonForm({ person, onSubmit, onCancel, isSubmitting = false }:
       onSubmit({
         name: name.trim(),
         color,
-        minecraftUsername: minecraftUsername.trim(),
+        imageUrl: imageUrl || undefined,
       })
     }
   }
@@ -54,18 +49,10 @@ export function PersonForm({ person, onSubmit, onCancel, isSubmitting = false }:
         value={name}
         onChange={(e) => setName(e.target.value)}
         error={errors.name}
-        placeholder="z.B. Steve"
         disabled={isSubmitting}
       />
 
-      <Input
-        label="Minecraft Username *"
-        value={minecraftUsername}
-        onChange={(e) => setMinecraftUsername(e.target.value)}
-        error={errors.username}
-        placeholder="z.B. Steve123"
-        disabled={isSubmitting}
-      />
+      <ImageUpload label="Profilbild" value={imageUrl} onChange={setImageUrl} />
 
       <ColorPicker label="Farbe" value={color} onChange={setColor} />
 

@@ -3,9 +3,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Project, ProjectStatus } from '../../types'
 import { usePeople } from '../../hooks'
-import { formatDate, isPastDeadline } from '../../utils/dateUtils'
 import { createGradient } from '../../utils/colorUtils'
-import { MinecraftHead } from '../common/MinecraftHead'
 import { Button } from '../common/Button'
 import clsx from 'clsx'
 import styles from './ProjectCard.module.css'
@@ -67,8 +65,6 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
     }
   }, [assignedPeople])
 
-  const isPast = project.deadline ? isPastDeadline(project.deadline) : false
-
   return (
     <div ref={setNodeRef} className={styles.card} style={{ ...borderStyle, ...style }}>
       <div className={styles.header}>
@@ -81,13 +77,12 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         </span>
       </div>
 
-      <p className={styles.description}>{project.description}</p>
+      {project.description && <p className={styles.description}>{project.description}</p>}
 
-      {project.deadline && (
-        <div className={clsx(styles.deadline, isPast && styles.overdue)}>
-          <span className={styles.deadlineLabel}>Deadline:</span>
-          <span className={styles.deadlineDate}>{formatDate(project.deadline)}</span>
-          {isPast && <span className={styles.overdueLabel}> (überfällig!)</span>}
+      {project.effort && (
+        <div className={styles.effort}>
+          <span className={styles.effortLabel}>Aufwand:</span>
+          <span className={styles.effortValue}>{project.effort}</span>
         </div>
       )}
 
@@ -97,7 +92,13 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           <div className={styles.peopleList}>
             {assignedPeople.map((person) => (
               <div key={person.id} className={styles.personItem} title={person.name}>
-                <MinecraftHead username={person.minecraftUsername} size={32} />
+                {person.imageUrl ? (
+                  <img src={person.imageUrl} alt={person.name} className={styles.personAvatar} />
+                ) : (
+                  <div className={styles.personAvatarPlaceholder} style={{ backgroundColor: person.color }}>
+                    {person.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <span className={styles.personName}>{person.name}</span>
               </div>
             ))}

@@ -51,6 +51,7 @@
 }
 
 .statusBadge {
+  font-family: 'Minecraft', monospace;
   font-size: 12px;
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--border-radius);
@@ -82,34 +83,24 @@
   margin: 0;
 }
 
-.deadline {
+.effort {
   font-size: 13px;
+  font-family: 'Minecraft', monospace;
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm);
   background: var(--mc-stone-dark);
   border-radius: var(--border-radius);
-  border-left: var(--border-medium) solid var(--mc-diamond-blue);
+  border-left: var(--border-medium) solid var(--mc-gold);
 }
 
-.deadline.overdue {
-  border-left-color: var(--mc-redstone);
-  background: rgba(255, 0, 0, 0.1);
-}
-
-.deadlineLabel {
+.effortLabel {
   color: var(--text-secondary);
-  font-weight: 600;
 }
 
-.deadlineDate {
-  color: var(--text-primary);
-}
-
-.overdueLabel {
-  color: var(--mc-redstone);
-  font-weight: 600;
+.effortValue {
+  color: var(--mc-gold);
 }
 
 .people {
@@ -139,8 +130,31 @@
   border-radius: var(--border-radius);
 }
 
+.personAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius);
+  border: var(--border-thin) solid var(--mc-stone-lighter);
+  object-fit: cover;
+}
+
+.personAvatarPlaceholder {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius);
+  border: var(--border-thin) solid var(--mc-stone-lighter);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Minecraft', monospace;
+  font-size: 16px;
+  color: #000;
+  font-weight: bold;
+}
+
 .personName {
   font-size: 13px;
+  font-family: 'Minecraft', monospace;
   color: var(--text-primary);
 }
 

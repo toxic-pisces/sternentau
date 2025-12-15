@@ -17,6 +17,7 @@ interface ProjectFormProps {
     priority: number
   }) => void
   onCancel: () => void
+  onDelete?: () => void
   isSubmitting?: boolean
 }
 
@@ -37,6 +38,7 @@ export function ProjectForm({
   project,
   onSubmit,
   onCancel,
+  onDelete,
   isSubmitting = false,
 }: ProjectFormProps) {
   const { people } = usePeople()
@@ -148,12 +150,19 @@ export function ProjectForm({
       )}
 
       <div className={styles.actions}>
-        <Button type="button" onClick={onCancel} variant="secondary" disabled={isSubmitting}>
-          Abbrechen
-        </Button>
-        <Button type="submit" variant="primary" disabled={isSubmitting}>
-          {isSubmitting ? 'Wird gespeichert...' : project ? 'Aktualisieren' : 'Erstellen'}
-        </Button>
+        {onDelete && (
+          <Button type="button" onClick={onDelete} variant="danger" disabled={isSubmitting}>
+            Löschen
+          </Button>
+        )}
+        <div className={styles.rightActions}>
+          <Button type="button" onClick={onCancel} variant="secondary" disabled={isSubmitting}>
+            Abbrechen
+          </Button>
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Wird gespeichert...' : project ? 'Aktualisieren' : 'Erstellen'}
+          </Button>
+        </div>
       </div>
     </form>
   )

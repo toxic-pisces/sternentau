@@ -68,7 +68,6 @@ export function ImageUpload({ value, onChange, label }: ImageUploadProps) {
           </div>
         ) : (
           <button type="button" onClick={handleClick} className={styles.uploadButton}>
-            <span className={styles.uploadIcon}>📷</span>
             <span className={styles.uploadText}>Bild auswählen</span>
           </button>
         )}

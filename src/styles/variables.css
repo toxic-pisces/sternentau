@@ -9,9 +9,9 @@
   --mc-redstone: #FF0000;
 
   /* Status Colors */
-  --status-planned: #3498DB;
-  --status-in-progress: #F39C12;
-  --status-completed: #27AE60;
+  --status-planned: #5DADE2;
+  --status-in-progress: #FFD700;
+  --status-completed: #55FF55;
 
   /* Text Colors */
   --text-primary: #FFFFFF;

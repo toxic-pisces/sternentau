@@ -1,17 +1,50 @@
+import { useState, useRef, useEffect } from 'react'
 import { Person } from '../../types'
-import { Button } from '../common/Button'
 import styles from './PersonCard.module.css'
 
 interface PersonCardProps {
   person: Person
   projectCount: number
   onEdit: () => void
-  onDelete: () => void
+  onDelete?: () => void
 }
 
-export function PersonCard({ person, projectCount, onEdit, onDelete }: PersonCardProps) {
+export function PersonCard({ person, projectCount, onEdit }: PersonCardProps) {
+  const [isPressHold, setIsPressHold] = useState(false)
+  const pressTimer = useRef<number>()
+
+  const handleMouseDown = () => {
+    pressTimer.current = window.setTimeout(() => {
+      setIsPressHold(true)
+    }, 200)
+  }
+
+  const handleMouseUp = () => {
+    clearTimeout(pressTimer.current)
+    if (!isPressHold) {
+      onEdit()
+    }
+    setIsPressHold(false)
+  }
+
+  const handleMouseLeave = () => {
+    clearTimeout(pressTimer.current)
+  }
+
+  useEffect(() => {
+    return () => clearTimeout(pressTimer.current)
+  }, [])
+
   return (
-    <div className={styles.card} style={{ borderLeftColor: person.color }}>
+    <div
+      className={styles.card}
+      style={{ borderLeftColor: person.color }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
+    >
       <div className={styles.header}>
         {person.imageUrl ? (
           <img src={person.imageUrl} alt={person.name} className={styles.avatar} />
@@ -36,15 +69,6 @@ export function PersonCard({ person, projectCount, onEdit, onDelete }: PersonCar
         <span className={styles.projectCount}>
           {projectCount} {projectCount === 1 ? 'Projekt' : 'Projekte'}
         </span>
-      </div>
-
-      <div className={styles.actions}>
-        <Button onClick={onEdit} variant="secondary" size="small">
-          Bearbeiten
-        </Button>
-        <Button onClick={onDelete} variant="danger" size="small">
-          Löschen
-        </Button>
       </div>
     </div>
   )

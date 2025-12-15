@@ -106,10 +106,15 @@
 
 .actions {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: var(--spacing-md);
   margin-top: var(--spacing-md);
 }
 
-.actions button {
+.rightActions {
+  display: flex;
+  gap: var(--spacing-md);
   flex: 1;
+  justify-content: flex-end;
 }

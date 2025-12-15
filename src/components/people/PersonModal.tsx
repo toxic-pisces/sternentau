@@ -11,7 +11,7 @@ interface PersonModalProps {
 }
 
 export function PersonModal({ isOpen, onClose, person }: PersonModalProps) {
-  const { addPerson, updatePerson } = usePeople()
+  const { addPerson, updatePerson, deletePerson } = usePeople()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (data: {
@@ -36,6 +36,24 @@ export function PersonModal({ isOpen, onClose, person }: PersonModalProps) {
     }
   }
 
+  const handleDelete = async () => {
+    if (!person) return
+
+    const confirmation = confirm(`Person "${person.name}" wirklich löschen?`)
+    if (!confirmation) return
+
+    setIsSubmitting(true)
+    try {
+      await deletePerson(person.id)
+      onClose()
+    } catch (error) {
+      console.error('Failed to delete person:', error)
+      alert('Fehler beim Löschen. Bitte versuche es erneut.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -47,6 +65,7 @@ export function PersonModal({ isOpen, onClose, person }: PersonModalProps) {
         person={person}
         onSubmit={handleSubmit}
         onCancel={onClose}
+        onDelete={person ? handleDelete : undefined}
         isSubmitting={isSubmitting}
       />
     </Modal>

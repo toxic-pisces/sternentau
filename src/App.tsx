@@ -2,6 +2,7 @@ import { PersonProvider, ProjectProvider } from './contexts'
 import { Layout } from './components/layout'
 import { PeopleList } from './components/people'
 import { ProjectList } from './components/projects'
+import { CompletedProjectList } from './components/projects/CompletedProjectList'
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
             <>
               {activeTab === 'projects' && <ProjectList />}
               {activeTab === 'people' && <PeopleList />}
+              {activeTab === 'completed' && <CompletedProjectList />}
             </>
           )}
         </Layout>

@@ -4,11 +4,11 @@ import { Navigation } from './Navigation'
 import styles from './Layout.module.css'
 
 interface LayoutProps {
-  children: (activeTab: 'projects' | 'people') => ReactNode
+  children: (activeTab: 'projects' | 'people' | 'completed') => ReactNode
 }
 
 export function Layout({ children }: LayoutProps) {
-  const [activeTab, setActiveTab] = useState<'projects' | 'people'>('projects')
+  const [activeTab, setActiveTab] = useState<'projects' | 'people' | 'completed'>('projects')
 
   return (
     <div className={styles.layout}>

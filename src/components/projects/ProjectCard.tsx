@@ -1,17 +1,16 @@
-import { useMemo } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Project, ProjectStatus } from '../../types'
 import { usePeople } from '../../hooks'
 import { createGradient } from '../../utils/colorUtils'
-import { Button } from '../common/Button'
 import clsx from 'clsx'
 import styles from './ProjectCard.module.css'
 
 interface ProjectCardProps {
   project: Project
   onEdit: () => void
-  onDelete: () => void
+  onDelete?: () => void
 }
 
 const STATUS_LABELS: Record<ProjectStatus, string> = {
@@ -26,8 +25,10 @@ const STATUS_CLASSES: Record<ProjectStatus, string> = {
   Abgeschlossen: styles.statusCompleted,
 }
 
-export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
+export function ProjectCard({ project, onEdit }: ProjectCardProps) {
   const { getPersonsByIds } = usePeople()
+  const [isPressHold, setIsPressHold] = useState(false)
+  const pressTimer = useRef<number>()
 
   // Drag & Drop setup
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -39,6 +40,28 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
     transition,
     opacity: isDragging ? 0.5 : 1,
   }
+
+  const handleMouseDown = () => {
+    pressTimer.current = window.setTimeout(() => {
+      setIsPressHold(true)
+    }, 200)
+  }
+
+  const handleMouseUp = () => {
+    clearTimeout(pressTimer.current)
+    if (!isPressHold) {
+      onEdit()
+    }
+    setIsPressHold(false)
+  }
+
+  const handleMouseLeave = () => {
+    clearTimeout(pressTimer.current)
+  }
+
+  useEffect(() => {
+    return () => clearTimeout(pressTimer.current)
+  }, [])
 
   const assignedPeople = useMemo(() => {
     return getPersonsByIds(project.assignedPeople)
@@ -66,11 +89,18 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   }, [assignedPeople])
 
   return (
-    <div ref={setNodeRef} className={styles.card} style={{ ...borderStyle, ...style }}>
+    <div
+      ref={setNodeRef}
+      className={styles.card}
+      style={{ ...borderStyle, ...style }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
+      {...(isPressHold ? { ...attributes, ...listeners } : {})}
+    >
       <div className={styles.header}>
-        <button className={styles.dragHandle} {...attributes} {...listeners} aria-label="Drag to reorder">
-          ⠿
-        </button>
         <h3 className={styles.title}>{project.title}</h3>
         <span className={clsx(styles.statusBadge, STATUS_CLASSES[project.status])}>
           {STATUS_LABELS[project.status]}
@@ -105,15 +135,6 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           </div>
         </div>
       )}
-
-      <div className={styles.actions}>
-        <Button onClick={onEdit} variant="secondary" size="small">
-          Bearbeiten
-        </Button>
-        <Button onClick={onDelete} variant="danger" size="small">
-          Löschen
-        </Button>
-      </div>
     </div>
   )
 }

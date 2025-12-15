@@ -11,7 +11,7 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
-  const { addProject, updateProject } = useProjects()
+  const { addProject, updateProject, deleteProject } = useProjects()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (data: {
@@ -39,6 +39,24 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
     }
   }
 
+  const handleDelete = async () => {
+    if (!project) return
+
+    const confirmation = confirm(`Projekt "${project.title}" wirklich löschen?`)
+    if (!confirmation) return
+
+    setIsSubmitting(true)
+    try {
+      await deleteProject(project.id)
+      onClose()
+    } catch (error) {
+      console.error('Failed to delete project:', error)
+      alert('Fehler beim Löschen. Bitte versuche es erneut.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -50,6 +68,7 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
         project={project}
         onSubmit={handleSubmit}
         onCancel={onClose}
+        onDelete={project ? handleDelete : undefined}
         isSubmitting={isSubmitting}
       />
     </Modal>

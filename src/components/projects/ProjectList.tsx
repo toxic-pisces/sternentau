@@ -23,7 +23,7 @@ import { ProjectModal } from './ProjectModal'
 import styles from './ProjectList.module.css'
 
 export function ProjectList() {
-  const { projects, loading, deleteProject, reorderProjects } = useProjects()
+  const { projects, loading, reorderProjects } = useProjects()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | undefined>()
@@ -31,18 +31,6 @@ export function ProjectList() {
   const handleEdit = (project: Project) => {
     setEditingProject(project)
     setModalOpen(true)
-  }
-
-  const handleDelete = async (project: Project) => {
-    const confirmation = confirm(`Projekt "${project.title}" wirklich löschen?`)
-    if (!confirmation) return
-
-    try {
-      await deleteProject(project.id)
-    } catch (error) {
-      console.error('Failed to delete project:', error)
-      alert('Fehler beim Löschen. Bitte versuche es erneut.')
-    }
   }
 
   const handleAddNew = () => {
@@ -88,7 +76,6 @@ export function ProjectList() {
   }
 
   const activeProjects = projects.filter((p) => p.status !== 'Abgeschlossen')
-  const completedProjects = projects.filter((p) => p.status === 'Abgeschlossen')
 
   if (loading) {
     return <LoadingSpinner message="Lade Projekte..." />
@@ -103,7 +90,7 @@ export function ProjectList() {
         </Button>
       </div>
 
-      {activeProjects.length === 0 && completedProjects.length === 0 ? (
+      {activeProjects.length === 0 ? (
         <div className={styles.empty}>
           <p className={styles.emptyText}>Noch keine Projekte angelegt.</p>
           <Button onClick={handleAddNew} variant="primary">
@@ -111,40 +98,20 @@ export function ProjectList() {
           </Button>
         </div>
       ) : (
-        <>
-          {activeProjects.length > 0 && (
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext items={activeProjects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
-                <div className={styles.list}>
-                  {activeProjects.map((project) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      onEdit={() => handleEdit(project)}
-                      onDelete={() => handleDelete(project)}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          )}
-
-          {completedProjects.length > 0 && (
-            <div className={styles.completedSection}>
-              <h3 className={styles.completedTitle}>Abgeschlossen</h3>
-              <div className={styles.completedList}>
-                {completedProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    onEdit={() => handleEdit(project)}
-                    onDelete={() => handleDelete(project)}
-                  />
-                ))}
-              </div>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={activeProjects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+            <div className={styles.list}>
+              {activeProjects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  onEdit={() => handleEdit(project)}
+                  onDelete={() => {}}
+                />
+              ))}
             </div>
-          )}
-        </>
+          </SortableContext>
+        </DndContext>
       )}
 
       <ProjectModal isOpen={modalOpen} onClose={handleCloseModal} project={editingProject} />

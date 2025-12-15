@@ -10,10 +10,11 @@ interface PersonFormProps {
   person?: Person
   onSubmit: (data: { name: string; color: string; imageUrl?: string }) => void
   onCancel: () => void
+  onDelete?: () => void
   isSubmitting?: boolean
 }
 
-export function PersonForm({ person, onSubmit, onCancel, isSubmitting = false }: PersonFormProps) {
+export function PersonForm({ person, onSubmit, onCancel, onDelete, isSubmitting = false }: PersonFormProps) {
   const [name, setName] = useState(person?.name || '')
   const [imageUrl, setImageUrl] = useState(person?.imageUrl || '')
   const [color, setColor] = useState(person?.color || '#55FF55')
@@ -57,12 +58,19 @@ export function PersonForm({ person, onSubmit, onCancel, isSubmitting = false }:
       <ColorPicker label="Farbe" value={color} onChange={setColor} />
 
       <div className={styles.actions}>
-        <Button type="button" onClick={onCancel} variant="secondary" disabled={isSubmitting}>
-          Abbrechen
-        </Button>
-        <Button type="submit" variant="primary" disabled={isSubmitting}>
-          {isSubmitting ? 'Wird gespeichert...' : person ? 'Aktualisieren' : 'Erstellen'}
-        </Button>
+        {onDelete && (
+          <Button type="button" onClick={onDelete} variant="danger" disabled={isSubmitting}>
+            Löschen
+          </Button>
+        )}
+        <div className={styles.rightActions}>
+          <Button type="button" onClick={onCancel} variant="secondary" disabled={isSubmitting}>
+            Abbrechen
+          </Button>
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'Wird gespeichert...' : person ? 'Aktualisieren' : 'Erstellen'}
+          </Button>
+        </div>
       </div>
     </form>
   )

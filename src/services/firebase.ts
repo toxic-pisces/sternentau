@@ -2,13 +2,13 @@ import { initializeApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: 'AIzaSyC4aK7tVaia1784Ykm5VJuOsOfqaOC3qcM',
+  authDomain: 'sternentau-9fc03.firebaseapp.com',
+  databaseURL: 'https://sternentau-9fc03-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'sternentau-9fc03',
+  storageBucket: 'sternentau-9fc03.firebasestorage.app',
+  messagingSenderId: '445425125332',
+  appId: '1:445425125332:web:2acd51f9a914e552e77841',
 }
 
 // Initialize Firebase

@@ -1,0 +1,50 @@
+.nav {
+  background: var(--mc-stone-dark);
+  border-bottom: var(--border-medium) solid var(--mc-stone-lighter);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.tab {
+  font-family: 'Minecraft', monospace;
+  font-size: 14px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tab:hover {
+  color: var(--text-primary);
+  background: rgba(85, 255, 85, 0.1);
+}
+
+.tab.active {
+  color: var(--mc-grass-green);
+  border-bottom-color: var(--mc-grass-green);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-md);
+  }
+
+  .tab {
+    font-size: 12px;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}

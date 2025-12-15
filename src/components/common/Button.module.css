@@ -1,0 +1,67 @@
+.button {
+  font-family: 'Minecraft', monospace;
+  font-size: 14px;
+  font-weight: normal;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: var(--border-thick) solid;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow:
+    inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+    inset 0 4px 0 rgba(255, 255, 255, 0.1);
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.primary {
+  background-color: var(--mc-grass-green);
+  border-color: #40cc40;
+  color: #000;
+}
+
+.secondary {
+  background-color: var(--mc-stone-lighter);
+  border-color: #5a5d64;
+  color: var(--text-primary);
+}
+
+.danger {
+  background-color: var(--mc-redstone);
+  border-color: #cc0000;
+  color: var(--text-primary);
+}
+
+/* Sizes */
+.small {
+  font-size: 12px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.medium {
+  font-size: 14px;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.large {
+  font-size: 16px;
+  padding: var(--spacing-md) var(--spacing-lg);
+}

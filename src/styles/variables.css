@@ -1,0 +1,51 @@
+:root {
+  /* Minecraft Colors */
+  --mc-stone-dark: #2C2F33;
+  --mc-stone-light: #36393F;
+  --mc-stone-lighter: #42454A;
+  --mc-grass-green: #55FF55;
+  --mc-gold: #FFD700;
+  --mc-diamond-blue: #5DADE2;
+  --mc-redstone: #FF0000;
+
+  /* Status Colors */
+  --status-planned: #3498DB;
+  --status-in-progress: #F39C12;
+  --status-completed: #27AE60;
+
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #B9BBBE;
+  --text-muted: #72767D;
+
+  /* Spacing (multiples of 8) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Borders */
+  --border-thin: 1px;
+  --border-medium: 2px;
+  --border-thick: 3px;
+  --border-extra-thick: 4px;
+  --border-radius: 4px;
+  --border-radius-lg: 8px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* Z-Index */
+  --z-dropdown: 1000;
+  --z-modal-overlay: 2000;
+  --z-modal: 2001;
+}

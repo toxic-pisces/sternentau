@@ -1,0 +1,165 @@
+.card {
+  background: var(--mc-stone-light);
+  border: var(--border-thick) solid var(--mc-stone-lighter);
+  border-left-width: 4px;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.dragHandle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: grab;
+  padding: var(--spacing-xs);
+  line-height: 1;
+  transition: color var(--transition-fast);
+}
+
+.dragHandle:hover {
+  color: var(--mc-grass-green);
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.title {
+  font-family: 'Minecraft', monospace;
+  font-size: 18px;
+  margin: 0;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.statusBadge {
+  font-size: 12px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.statusPlanned {
+  background: var(--status-planned);
+  color: #fff;
+}
+
+.statusInProgress {
+  background: var(--status-in-progress);
+  color: #000;
+}
+
+.statusCompleted {
+  background: var(--status-completed);
+  color: #fff;
+}
+
+.description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.deadline {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--mc-stone-dark);
+  border-radius: var(--border-radius);
+  border-left: var(--border-medium) solid var(--mc-diamond-blue);
+}
+
+.deadline.overdue {
+  border-left-color: var(--mc-redstone);
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.deadlineLabel {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.deadlineDate {
+  color: var(--text-primary);
+}
+
+.overdueLabel {
+  color: var(--mc-redstone);
+  font-weight: 600;
+}
+
+.people {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.peopleLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.peopleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.personItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--mc-stone-dark);
+  border-radius: var(--border-radius);
+}
+
+.personName {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: auto;
+}
+
+.actions button {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .statusBadge {
+    align-self: flex-start;
+  }
+}

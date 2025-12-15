@@ -3,7 +3,7 @@
 /* Minecraft Font (will be loaded later) */
 @font-face {
   font-family: 'Minecraft';
-  src: url('/fonts/minecraft.ttf') format('truetype');
+  src: url('/sternentau/fonts/minecraft.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

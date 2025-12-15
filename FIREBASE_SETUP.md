@@ -29,7 +29,23 @@
 3. **Firebase Hosting**: Nicht aktivieren (wir nutzen GitHub Pages)
 4. Klicke auf **"App registrieren"**
 
-### 4. Firebase Configuration kopieren
+### 4. GitHub Pages Domain autorisieren (WICHTIG!)
+
+⚠️ **Dieser Schritt ist essentiell für GitHub Pages!**
+
+1. Firebase Console → **Authentication** → **Settings** → **Authorized domains**
+2. Klicke auf **"Domain hinzufügen"**
+3. Füge hinzu: `toxic-pisces.github.io`
+4. Speichern
+
+**Falls Authentication nicht aktiviert ist:**
+1. Firebase Console → **Build** → **Authentication**
+2. Klicke auf **"Get Started"**
+3. Du musst keine Sign-in Methoden aktivieren
+4. Gehe dann zu **Settings** → **Authorized domains**
+5. Füge `toxic-pisces.github.io` hinzu
+
+### 5. Firebase Configuration kopieren
 
 Du siehst jetzt einen Code-Block wie diesen:
 

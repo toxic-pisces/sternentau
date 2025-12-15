@@ -4,6 +4,10 @@
   gap: var(--spacing-lg);
 }
 
+.passwordChange {
+  margin: calc(var(--spacing-md) * -1) 0 0 0;
+}
+
 .actions {
   display: flex;
   justify-content: space-between;

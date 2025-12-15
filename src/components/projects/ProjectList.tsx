@@ -1,19 +1,4 @@
 import { useState } from 'react'
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from '@dnd-kit/core'
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
 import { Project } from '../../types'
 import { useProjects } from '../../hooks'
 import { Button } from '../common/Button'
@@ -43,35 +28,49 @@ export function ProjectList() {
     setEditingProject(undefined)
   }
 
-  // Drag & Drop setup
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  )
+  const handleMoveUp = async (projectId: string) => {
+    const index = projects.findIndex((p) => p.id === projectId)
+    if (index <= 0) return
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event
+    const reordered = [...projects]
+    const temp = reordered[index]
+    reordered[index] = reordered[index - 1]
+    reordered[index - 1] = temp
 
-    if (over && active.id !== over.id) {
-      const oldIndex = projects.findIndex((p) => p.id === active.id)
-      const newIndex = projects.findIndex((p) => p.id === over.id)
+    // Update priorities
+    const withNewPriorities = reordered.map((p, idx) => ({
+      ...p,
+      priority: idx + 1,
+    }))
 
-      const reordered = arrayMove(projects, oldIndex, newIndex)
+    try {
+      await reorderProjects(withNewPriorities)
+    } catch (error) {
+      console.error('Failed to reorder projects:', error)
+      alert('Fehler beim Sortieren. Bitte versuche es erneut.')
+    }
+  }
 
-      // Update priorities
-      const withNewPriorities = reordered.map((p, idx) => ({
-        ...p,
-        priority: idx + 1,
-      }))
+  const handleMoveDown = async (projectId: string) => {
+    const index = projects.findIndex((p) => p.id === projectId)
+    if (index < 0 || index >= projects.length - 1) return
 
-      try {
-        await reorderProjects(withNewPriorities)
-      } catch (error) {
-        console.error('Failed to reorder projects:', error)
-        alert('Fehler beim Sortieren. Bitte versuche es erneut.')
-      }
+    const reordered = [...projects]
+    const temp = reordered[index]
+    reordered[index] = reordered[index + 1]
+    reordered[index + 1] = temp
+
+    // Update priorities
+    const withNewPriorities = reordered.map((p, idx) => ({
+      ...p,
+      priority: idx + 1,
+    }))
+
+    try {
+      await reorderProjects(withNewPriorities)
+    } catch (error) {
+      console.error('Failed to reorder projects:', error)
+      alert('Fehler beim Sortieren. Bitte versuche es erneut.')
     }
   }
 
@@ -98,20 +97,18 @@ export function ProjectList() {
           </Button>
         </div>
       ) : (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={activeProjects.map((p) => p.id)} strategy={verticalListSortingStrategy}>
-            <div className={styles.list}>
-              {activeProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  onEdit={() => handleEdit(project)}
-                  onDelete={() => {}}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
+        <div className={styles.list}>
+          {activeProjects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onEdit={() => handleEdit(project)}
+              onDelete={() => {}}
+              onMoveUp={index > 0 ? () => handleMoveUp(project.id) : undefined}
+              onMoveDown={index < activeProjects.length - 1 ? () => handleMoveDown(project.id) : undefined}
+            />
+          ))}
+        </div>
       )}
 
       <ProjectModal isOpen={modalOpen} onClose={handleCloseModal} project={editingProject} />

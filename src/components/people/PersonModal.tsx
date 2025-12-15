@@ -18,14 +18,35 @@ export function PersonModal({ isOpen, onClose, person }: PersonModalProps) {
     name: string
     color: string
     imageUrl?: string
+    password?: string
+    currentPassword?: string
   }) => {
     setIsSubmitting(true)
 
     try {
       if (person) {
-        await updatePerson(person.id, data)
+        // Verify current password
+        if (data.currentPassword !== person.password) {
+          alert('Falsches Passwort!')
+          setIsSubmitting(false)
+          return
+        }
+
+        // Update person (with optional new password)
+        await updatePerson(person.id, {
+          name: data.name,
+          color: data.color,
+          imageUrl: data.imageUrl,
+          ...(data.password && { password: data.password }),
+        })
       } else {
-        await addPerson(data)
+        // Create new person
+        await addPerson({
+          name: data.name,
+          color: data.color,
+          imageUrl: data.imageUrl,
+          password: data.password!,
+        })
       }
       onClose()
     } catch (error) {

@@ -1,6 +1,4 @@
-import { useMemo, useState, useRef, useEffect } from 'react'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import { useMemo, useRef } from 'react'
 import { Project, ProjectStatus } from '../../types'
 import { usePeople } from '../../hooks'
 import { createGradient } from '../../utils/colorUtils'
@@ -11,6 +9,8 @@ interface ProjectCardProps {
   project: Project
   onEdit: () => void
   onDelete?: () => void
+  onMoveUp?: () => void
+  onMoveDown?: () => void
 }
 
 const STATUS_LABELS: Record<ProjectStatus, string> = {
@@ -25,43 +25,32 @@ const STATUS_CLASSES: Record<ProjectStatus, string> = {
   Abgeschlossen: styles.statusCompleted,
 }
 
-export function ProjectCard({ project, onEdit }: ProjectCardProps) {
+export function ProjectCard({ project, onEdit, onMoveUp, onMoveDown }: ProjectCardProps) {
   const { getPersonsByIds } = usePeople()
-  const [isPressHold, setIsPressHold] = useState(false)
-  const pressTimer = useRef<number>()
+  const touchStartY = useRef<number>(0)
+  const touchStartX = useRef<number>(0)
 
-  // Drag & Drop setup
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: project.id,
-  })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY
+    touchStartX.current = e.touches[0].clientX
   }
 
-  const handleMouseDown = () => {
-    pressTimer.current = window.setTimeout(() => {
-      setIsPressHold(true)
-    }, 200)
-  }
-
-  const handleMouseUp = () => {
-    clearTimeout(pressTimer.current)
-    if (!isPressHold) {
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndY = e.changedTouches[0].clientY
+    const touchEndX = e.changedTouches[0].clientX
+    const deltaY = Math.abs(touchEndY - touchStartY.current)
+    const deltaX = Math.abs(touchEndX - touchStartX.current)
+    
+    // Nur als Klick werten wenn Bewegung < 10px (also kein Scroll/Swipe)
+    if (deltaY < 10 && deltaX < 10) {
       onEdit()
     }
-    setIsPressHold(false)
   }
 
-  const handleMouseLeave = () => {
-    clearTimeout(pressTimer.current)
+  const handleClick = (e: React.MouseEvent) => {
+    // Normale Klicks für Desktop
+    onEdit()
   }
-
-  useEffect(() => {
-    return () => clearTimeout(pressTimer.current)
-  }, [])
 
   const assignedPeople = useMemo(() => {
     return getPersonsByIds(project.assignedPeople)
@@ -89,52 +78,72 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
   }, [assignedPeople])
 
   return (
-    <div
-      ref={setNodeRef}
-      className={styles.card}
-      style={{ ...borderStyle, ...style }}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-      onTouchStart={handleMouseDown}
-      onTouchEnd={handleMouseUp}
-      {...(isPressHold ? { ...attributes, ...listeners } : {})}
-    >
-      <div className={styles.header}>
-        <h3 className={styles.title}>{project.title}</h3>
-        <span className={clsx(styles.statusBadge, STATUS_CLASSES[project.status])}>
-          {STATUS_LABELS[project.status]}
-        </span>
+    <div className={styles.card} style={borderStyle}>
+      <div className={styles.reorderButtons}>
+        {onMoveUp && (
+          <button 
+            className={styles.reorderButton} 
+            onClick={onMoveUp} 
+            title="Nach oben verschieben"
+            type="button"
+          >
+            ▲
+          </button>
+        )}
+        {onMoveDown && (
+          <button 
+            className={styles.reorderButton} 
+            onClick={onMoveDown} 
+            title="Nach unten verschieben"
+            type="button"
+          >
+            ▼
+          </button>
+        )}
       </div>
 
-      {project.description && <p className={styles.description}>{project.description}</p>}
-
-      {project.effort && (
-        <div className={styles.effort}>
-          <span className={styles.effortLabel}>Aufwand:</span>
-          <span className={styles.effortValue}>{project.effort}</span>
+      <div 
+        className={styles.content} 
+        onClick={handleClick}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className={styles.header}>
+          <h3 className={styles.title}>{project.title}</h3>
+          <span className={clsx(styles.statusBadge, STATUS_CLASSES[project.status])}>
+            {STATUS_LABELS[project.status]}
+          </span>
         </div>
-      )}
 
-      {assignedPeople.length > 0 && (
-        <div className={styles.people}>
-          <span className={styles.peopleLabel}>Zugeordnet:</span>
-          <div className={styles.peopleList}>
-            {assignedPeople.map((person) => (
-              <div key={person.id} className={styles.personItem} title={person.name}>
-                {person.imageUrl ? (
-                  <img src={person.imageUrl} alt={person.name} className={styles.personAvatar} />
-                ) : (
-                  <div className={styles.personAvatarPlaceholder} style={{ backgroundColor: person.color }}>
-                    {person.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <span className={styles.personName}>{person.name}</span>
-              </div>
-            ))}
+        {project.description && <p className={styles.description}>{project.description}</p>}
+
+        {project.effort && (
+          <div className={styles.effort}>
+            <span className={styles.effortLabel}>Aufwand:</span>
+            <span className={styles.effortValue}>{project.effort}</span>
           </div>
-        </div>
-      )}
+        )}
+
+        {assignedPeople.length > 0 && (
+          <div className={styles.people}>
+            <span className={styles.peopleLabel}>Zugeordnet:</span>
+            <div className={styles.peopleList}>
+              {assignedPeople.map((person) => (
+                <div key={person.id} className={styles.personItem} title={person.name}>
+                  {person.imageUrl ? (
+                    <img src={person.imageUrl} alt={person.name} className={styles.personAvatar} />
+                  ) : (
+                    <div className={styles.personAvatarPlaceholder} style={{ backgroundColor: person.color }}>
+                      {person.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className={styles.personName}>{person.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

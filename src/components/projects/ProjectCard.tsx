@@ -47,7 +47,7 @@ export function ProjectCard({ project, onEdit, onMoveUp, onMoveDown }: ProjectCa
     }
   }
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     // Normale Klicks für Desktop
     onEdit()
   }
